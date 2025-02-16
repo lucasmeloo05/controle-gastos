@@ -29,6 +29,9 @@ Funções:
 Renderização:
 
 -Formulário para cadastro de pessoas.
+
 -Tabela de listagem de pessoas.
+
 -Formulário para cadastro de transações.
+
 -Tabela de consulta de totais.
