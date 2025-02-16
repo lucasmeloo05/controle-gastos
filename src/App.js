@@ -16,7 +16,10 @@ export default function App() {
   //Adicionar uma nova pessoa
   const adicionarPessoa = () => {
     //Verifica se o nome e a idade não estão vazias
-    if (!nome || !idade) return;
+    if (!nome || !idade){
+      alert("Preencha todos os campos corretamente!")
+      return;
+    } 
     //Verifica se a idade é >= 0
     if(idade < 0){
       alert('Insira uma idade válida!');
@@ -45,6 +48,12 @@ export default function App() {
   const adicionarTransacao = () => {
     //Verifica se a descrição, quantidade, e ID da pessoa não é vazia
     if (!descricao || !quantidade || !pessoaID) return;
+    //Verifica se a quantia inserida não é negativa
+    if (quantidade < 0){
+      alert("Insira uma quantia válida");
+      setQuantidade('');
+      return;
+    }
     const pessoaEncontrada = pessoa.find((p) => p.id === parseInt(pessoaID));
     //Verifica se a pessoa foi encontrada
     if (!pessoaEncontrada) return;
@@ -70,13 +79,22 @@ export default function App() {
     setTipo("despesa");
   };
 
-  //Tabela que mostra receitas, despesas e também calcula o saldo
+  //Função para gerar tabela que mostra receitas, despesas e também calcula o saldo
   const consultaSaldo = (id) => {
     const transacoes = transacao.filter((t) => t.pessoaID === id);
     const receitas = transacoes.filter((t) => t.tipo === "receita").reduce((sum, t) => sum + t.quantidade, 0);
     const despesas = transacoes.filter((t) => t.tipo === "despesa").reduce((sum, t) => sum + t.quantidade, 0);
     return { receitas, despesas, saldo: receitas - despesas };
   };
+
+  //Função para mostrar na tabela de consultas de totais a soma total de receitas, despesas e o saldo
+  const totalGeral = () => {
+    const totalReceitas = transacao.filter((t) => t.tipo === "receita").reduce((sum, t) => sum + t.quantidade, 0);
+    const totalDespesas = transacao.filter((t) => t.tipo === "despesa").reduce((sum, t) => sum + t.quantidade, 0);
+    return { totalReceitas, totalDespesas, saldoGeral: totalReceitas - totalDespesas };
+  };
+
+  const { totalReceitas, totalDespesas, saldoGeral } = totalGeral();
 
   return (
     <div className="container">
@@ -159,6 +177,13 @@ export default function App() {
                 </tr>
               );
             })}
+            {/*Exibição do total de receitas, despesas e o saldo*/}
+            <tr>
+              <td><strong>Total Geral</strong></td>
+              <td><strong>{totalReceitas}</strong></td>
+              <td><strong>{totalDespesas}</strong></td>
+              <td><strong>{saldoGeral}</strong></td>
+            </tr>
           </tbody>
         </table>
       </div>
